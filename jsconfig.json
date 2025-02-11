@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "module": "esnext",
+    "target": "es2017",
+    "moduleResolution": "Node",
+  },
+  "exclude": ["node_modules", "dist"]
+}
