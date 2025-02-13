@@ -1,6 +1,6 @@
 <script setup>
 
-import index from '@/shaderBackgroundWebsite/index.vue';
+import index from '../components/shaderBackgroundWebsite/index.vue';
 </script>
 
 <template>

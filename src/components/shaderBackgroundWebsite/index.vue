@@ -8,7 +8,7 @@
       <TresGridHelper :scale="50" :position="[0, 0, 0]"/>
 
         <Suspense>
-      <shaderModel :position="[0,-3,0]"></shaderModel>
+      <bufferShader :position="[0,-3,0]"></bufferShader>
     </Suspense>
 
       <StatsGl />
@@ -21,16 +21,15 @@
 <script setup lang="ts">
 import { reactive,watch,onUnmounted } from 'vue'
 import { Pane } from 'tweakpane'
-
 import * as THREE from 'three'
 import { OrbitControls } from '@tresjs/cientos'
 import { SRGBColorSpace, BasicShadowMap, NoToneMapping } from 'three'
-
-
 import { StatsGl } from '@tresjs/cientos'
 // 着色器
-
 import shaderModel from './components/shaderModel.vue'
+import bufferShader from './components/bufferShader.vue'
+import vertex from './shader/vertex.glsl'
+import fragment from './shader/fragment.glsl'
 
 
 const state = reactive({
