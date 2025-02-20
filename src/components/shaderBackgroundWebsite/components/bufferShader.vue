@@ -1,81 +1,50 @@
+<!-- 通过构造类来管理shader -->
 <template>
   <TresMesh>
-      <TresPlaneGeometry :args="[sizes.width.value / 10, sizes.height.value / 10]" />
-      <TresShaderMaterial v-bind="tsMaterialConfig" />
+    <TresPlaneGeometry :args="[sizes.width.value / 10, sizes.height.value / 10]" />
+    <TresMeshBasicMaterial :map="bufferMain.readBuffer.texture" :side="DoubleSide"/>
   </TresMesh>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import * as THREE from 'three';
-import { useTexture, useTresContext, useRenderLoop } from '@tresjs/core';
-import { gsap } from 'gsap';
-import { useGLTF } from "@tresjs/cientos";
+import { useTresContext, useRenderLoop } from '@tresjs/core';
+import { DoubleSide } from 'three'
+const {  sizes, camera, renderer,raycaster } = useTresContext();
 
-import Descent3DFragment from '../shader/shaderToy/Descent3DFragment.glsl';
-import Descent3DVertex from '../shader/shaderToy/Descent3DVertex.glsl';
-
-const { sizes } = useTresContext();
-
-class BufferShader {
-  scene = new THREE.Scene();
-  readBuffer: THREE.WebGLRenderTarget;
-  writeBuffer: THREE.WebGLRenderTarget;
-  // uniforms: THREE.ShaderMaterial['uniforms'];
-
-  constructor(
-    public renderer: THREE.WebGLRenderer,
-    public camera: THREE.Camera,
-    public uniforms: THREE.ShaderMaterial['uniforms'],
-    public fragment: string,
-    // public vertex: string,
-    public width: number,
-    public height: number
-  ) {
-    this.readBuffer = new THREE.WebGLRenderTarget(width, height, {
-      format: THREE.RGBAFormat,
-      type: THREE.FloatType,
-    });
-    this.writeBuffer = this.readBuffer.clone();
-
-    this.createMesh();
-  }
-
-  swapBuffers() {
-    const tmp = this.readBuffer;
-    this.readBuffer = this.writeBuffer;
-    this.writeBuffer = tmp;
-  }
-
-  render(delta: number) {
-    this.renderer.setRenderTarget(this.writeBuffer);
-    this.renderer.render(this.scene, this.camera);
-    this.renderer.setRenderTarget(null);
-    this.swapBuffers();
-
-    this.uniforms.iTime.value = delta;
-  }
-
-  createMesh() {
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const material = new THREE.ShaderMaterial({
-      fragmentShader: this.fragment,
-      vertexShader: this.vertex,
-      uniforms: this.uniforms,
-      side: THREE.DoubleSide,
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    this.scene.add(mesh);
-  }
-}
+// 初始化鼠标和分辨率
 const iMouse = new THREE.Vector4();
-const iResolution = new THREE.Vector2(
-        sizes.width.value,
-        sizes.height.value,
-        
-    );
-const renderer = new THREE.WebGLRenderer();
-const camera = new THREE.PerspectiveCamera(45, sizes.width.value / sizes.height.value, 0.1, 1000);
+const iResolution = new THREE.Vector3(
+  sizes.width.value,
+  sizes.height.value,
+  renderer.value.pixelRatio
+);
+// 鼠标交互逻辑
+const handleMove = (e: MouseEvent) => {
+        iMouse.x = e.pageX;
+        iMouse.y = innerHeight - e.pageY;
+    };
+    document.addEventListener("mousemove", (e) => {
+        iMouse.z = 2;
+        iMouse.w = 2;
+
+        document.addEventListener("mousemove", handleMove);
+
+        document.addEventListener("mouseup", () => {
+            document.removeEventListener("mousemove", handleMove);
+            iMouse.z = 0;
+            iMouse.w = 0;
+        });
+    });
+
+onMounted(() => {
+  handleMove
+});
+
+onUnmounted(() => {
+  handleMove
+});
 const common = `
             
     #define dt 0.15
@@ -185,51 +154,7 @@ void main()
     gl_FragColor = data;
     
 }
-`;   
-const bufferShaderA = new BufferShader(
-  renderer,
-  camera,
-  bufferAFragment,
-        {
-            iTime: { value: 0 },
-            iFrame: { value: 0 },
-            iMouse: { value: iMouse },
-            iResolution: { value: iResolution },
-            iChannel0: { value: null },
-        },
-        iResolution.x,
-        iResolution.y
-);
-
-const bufferShaderB = new BufferShader(
-  renderer,
-  camera,
-  bufferAFragment,
-        {
-            iTime: { value: 0 },
-            iFrame: { value: 0 },
-            iMouse: { value: iMouse },
-            iResolution: { value: iResolution },
-            iChannel0: { value: null },
-        },
-        iResolution.x,
-        iResolution.y
-);
-
-const bufferShaderC = new BufferShader(
-  renderer,
-  camera,
-  bufferAFragment,
-        {
-            iTime: { value: 0 },
-            iFrame: { value: 0 },
-            iMouse: { value: iMouse },
-            iResolution: { value: iResolution },
-            iChannel0: { value: null },
-        },
-        iResolution.x,
-        iResolution.y
-);
+`;
 const bufferDFragment = `
     uniform float iTime;
     uniform vec3 iResolution;
@@ -305,78 +230,184 @@ const bufferDFragment = `
     }
 
     `;
-const bufferShaderD = new BufferShader(
-  renderer,
-  camera,
-  bufferDFragment,
-        {
-            iTime: { value: 0 },
-            iFrame: { value: 0 },
-            iMouse: { value: iMouse },
-            iResolution: { value: iResolution },
-            iChannel0: { value: null },
-            iChannel1: { value: null },
-        },
-        iResolution.x,
-        iResolution.y
+const bufferVertex = `
+  void main() {
+  gl_Position = vec4(position, 1.0);
+  }
+`;
+
+class BufferShader {
+    scene: THREE.Scene;
+    readBuffer: THREE.WebGLRenderTarget;
+    writeBuffer: THREE.WebGLRenderTarget;
+    mesh: THREE.Mesh;
+
+    constructor(
+        public renderer: THREE.WebGLRenderer,
+        public camera: THREE.Camera,
+        public fragmentShader: string,
+        public uniforms: THREE.ShaderMaterial['uniforms'],
+        public width: number,
+        public height: number
+    ) {
+        this.scene = new THREE.Scene();
+        this.readBuffer = new THREE.WebGLRenderTarget(width, height, {
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+        });
+        this.writeBuffer = new THREE.WebGLRenderTarget(width, height, {
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+        });
+
+        this.mesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2),
+            new THREE.ShaderMaterial({
+                fragmentShader: this.fragmentShader,
+                vertexShader: `
+                    void main() {
+                        gl_Position = vec4(position, 1.0);
+                    }
+                `,
+                uniforms: this.uniforms
+            })
+        );
+        this.scene.add(this.mesh);
+    }
+
+    render() {
+        this.renderer.setRenderTarget(this.writeBuffer);
+        this.renderer.render(this.scene, this.camera);
+        this.renderer.setRenderTarget(null);
+        this.swapBuffers();
+    }
+
+    swapBuffers() {
+        const temp = this.readBuffer;
+        this.readBuffer = this.writeBuffer;
+        this.writeBuffer = temp;
+    }
+}
+const bufferA = new BufferShader(
+    renderer.value,
+    camera.value,
+    bufferAFragment,
+    {
+        iTime: { value: 0 },
+        iResolution: { value: iResolution },
+        iMouse: { value: iMouse },
+        iFrame: { value: 0 },
+        iChannel0: { value: null }
+    },
+    sizes.width.value,
+    sizes.height.value
 );
-// const mainBuffer = new BufferShader(
-//         renderer,
-//         camera,
-//         `
-//         uniform vec3 iResolution;
-//         uniform sampler2D iChannel0;
-//         uniform sampler2D iChannel1;
 
-        
-//         void main()
-//         {
-//             vec4 col = texture2D(iChannel0, gl_FragCoord.xy/iResolution.xy, 0.);
-//             if (gl_FragCoord.y < 1. || gl_FragCoord.y >= (iResolution.y-1.))
-//                 col = vec4(0);
-//             gl_FragColor = col;
-//         }
-//         `,
-//         {
-//             iResolution: { value: iResolution },
-//             iChannel0: { value: null },
-//         },
-//         iResolution.x,
-//         iResolution.y
-//     );
-const tsMaterialConfig = {
-  uniforms: bufferShaderD.uniforms, // 使用 bufferShaderD 的 uniforms
-  vertexShader: Descent3DVertex,
-  fragmentShader: Descent3DFragment,
-  side: THREE.DoubleSide,
-};
+const bufferB = new BufferShader(
+    renderer.value,
+    camera.value,
+    bufferAFragment,
+    {
+        iTime: { value: 0 },
+        iResolution: { value: iResolution },
+        iMouse: { value: iMouse },
+        iFrame: { value: 0 },
+        iChannel0: { value: null }
+    },
+    sizes.width.value,
+    sizes.height.value
+);
 
+const bufferC = new BufferShader(
+    renderer.value,
+    camera.value,
+    bufferAFragment,
+    {
+        iTime: { value: 0 },
+        iResolution: { value: iResolution },
+        iMouse: { value: iMouse },
+        iFrame: { value: 0 },
+        iChannel0: { value: null }
+    },
+    sizes.width.value,
+    sizes.height.value
+);
+
+const bufferD = new BufferShader(
+    renderer.value,
+    camera.value,
+    bufferDFragment,
+    {
+        iTime: { value: 0 },
+        iResolution: { value: iResolution },
+        iMouse: { value: iMouse },
+        iFrame: { value: 0 },
+        iChannel0: { value: null },
+        iChannel1: { value: null }
+    },
+    sizes.width.value,
+    sizes.height.value
+);
+
+const bufferMain = new BufferShader(
+    renderer.value,
+    camera.value,
+    `
+        uniform vec3 iResolution;
+        uniform sampler2D iChannel0;
+        uniform sampler2D iChannel1;
+
+        void main() {
+            vec4 col = texture2D(iChannel0, gl_FragCoord.xy / iResolution.xy, 0.);
+            if (gl_FragCoord.y < 1. || gl_FragCoord.y >= (iResolution.y - 1.))
+                col = vec4(0);
+            gl_FragColor = col;
+        }
+    `,
+    {
+        iResolution: { value: iResolution },
+        iChannel0: { value: null }
+    },
+    sizes.width.value,
+    sizes.height.value
+);
+
+
+// 渲染循环
 const { onLoop } = useRenderLoop();
-onLoop(({ elapsed }) => {
-  bufferShaderA.render(elapsed);
-  bufferShaderB.render(elapsed);
-  bufferShaderC.render(elapsed);
-  bufferShaderD.render(elapsed);
+
+onLoop(({ elapsed, delta }) => {
+    bufferA.uniforms.iTime.value += delta;
+    bufferA.uniforms.iFrame.value++;
+    bufferB.uniforms.iTime.value += delta;
+    bufferB.uniforms.iFrame.value++;
+    bufferC.uniforms.iTime.value += delta;
+    bufferC.uniforms.iFrame.value++;
+    bufferD.uniforms.iTime.value += delta;
+    bufferD.uniforms.iFrame.value++;
+
+    bufferA.uniforms.iChannel0.value = bufferC.readBuffer.texture;
+    bufferA.render();
+
+    bufferB.uniforms.iChannel0.value = bufferA.readBuffer.texture;
+    bufferB.render();
+
+    bufferC.uniforms.iChannel0.value = bufferB.readBuffer.texture;
+    bufferC.render();
+
+    bufferD.uniforms.iChannel0.value = bufferA.readBuffer.texture;
+    bufferD.uniforms.iChannel1.value = bufferD.readBuffer.texture;
+    bufferD.render();
+
+    bufferMain.uniforms.iChannel0.value = bufferD.readBuffer.texture;
+    bufferMain.render();
 });
 
-onMounted(() => {
-  renderer.setSize(sizes.width.value, sizes.height.value);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  document.body.appendChild(renderer.domElement);
-
-  camera.position.set(0, 0, 5);
-  renderer.render(bufferShaderD.scene, camera);
-});
-
-onUnmounted(() => {
-  renderer.dispose();
-  document.body.removeChild(renderer.domElement);
-});
 </script>
 
 <style scoped>
 div {
-  width: 100vw;
-  height: 100vh;
+    width: 100vw;
+    height: 100vh;
 }
 </style>

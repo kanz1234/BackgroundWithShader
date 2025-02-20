@@ -8,13 +8,11 @@
       <TresGridHelper :scale="50" :position="[0, 0, 0]"/>
 
         <Suspense>
-      <bufferShader :position="[0,-3,0]"></bufferShader>
+      <bufferShader :position="[0,10,0]"></bufferShader>
     </Suspense>
 
       <StatsGl />
   </TresCanvas>
-
-  
 </template>
 
 
@@ -27,9 +25,9 @@ import { SRGBColorSpace, BasicShadowMap, NoToneMapping } from 'three'
 import { StatsGl } from '@tresjs/cientos'
 // 着色器
 import shaderModel from './components/shaderModel.vue'
+import shaderModel2 from './components/shaderModel2.vue'
 import bufferShader from './components/bufferShader.vue'
-import vertex from './shader/vertex.glsl'
-import fragment from './shader/fragment.glsl'
+
 
 
 const state = reactive({
@@ -40,6 +38,7 @@ const state = reactive({
   shadowMapType: BasicShadowMap,
   outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
+  // renderMode: 'on-demand',
   
 })
 // 控制相机的
