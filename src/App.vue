@@ -5,7 +5,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
 
-        <RouterLink to="/shaderBackgroundWebsite">shader网站</RouterLink>
+        <!-- <RouterLink to="/shaderBackgroundWebsite">shader网站</RouterLink> -->
 
     
 

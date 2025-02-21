@@ -14,8 +14,8 @@ import { gsap } from 'gsap'
 
 import { onMounted } from 'vue';
 import { useGLTF } from "@tresjs/cientos"
-import Descent3DFragment from '../shader/shaderToy/Descent3DFragment.glsl'
-import Descent3DVertex from '../shader/shaderToy/Descent3DVertex.glsl'
+import skyFragment from '../shader/sky/skyFragment.glsl'
+import skyVertex from '../shader/sky/skyVertex.glsl'
 
 const { sizes } = useTresContext()
 
@@ -32,10 +32,10 @@ const tsMaterialConfig = {
           // 控制方向
           flowDirection:{value: new THREE.Vector2(0, 1) },
       },
-  vertexShader: Descent3DVertex,
+  vertexShader: skyVertex,
   // 双面展示
   side:THREE.DoubleSide,
-  fragmentShader: Descent3DFragment
+  fragmentShader: skyFragment
       
 }
 
