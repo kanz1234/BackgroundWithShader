@@ -93,35 +93,43 @@ const toggleTheme = () => {
 </script>
 
 <style lang="scss" scoped>
-
-/* 样式保持不变 */
 .nav {
   max-width: 968px;
   height: var(--header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  @include min-screen(768px) {
+
+  // 当屏幕宽度大于或等于 768px 时
+  @media (min-width: 768px) {
     height: calc(var(--header-height) + 1.5rem);
     column-gap: 1rem;
   }
+
   #translate {
-    @include min-screen(768px) {
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       font-size: 0;
     }
   }
+
   &__logo {
     color: var(--title-color);
     font-weight: var(--font-medium);
   }
+
   &__menu {
     &--show {
       bottom: 0 !important;
     }
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       margin-left: auto;
     }
-    @include max-screen(767px) {
+
+    // 当屏幕宽度小于或等于 767px 时
+    @media (max-width: 767px) {
       position: fixed;
       bottom: -100%;
       left: 0;
@@ -132,29 +140,40 @@ const toggleTheme = () => {
       border-radius: 1.5rem 1.5rem 0 0;
       transition: 0.3s;
     }
-    @include max-screen(350px) {
+
+    // 当屏幕宽度小于或等于 350px 时
+    @media (max-width: 350px) {
       padding: 2rem 0.25rem 4rem;
     }
   }
+
   &__list {
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    @include max-screen(350px) {
+
+    // 当屏幕宽度小于或等于 350px 时
+    @media (max-width: 350px) {
       column-gap: 0;
     }
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       display: flex;
       column-gap: 2rem;
     }
   }
+
   &__item {
     align-items: center;
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       align-content: center;
       display: flex;
       flex-wrap: wrap;
     }
   }
+
   &__link {
     display: flex;
     flex-direction: column;
@@ -164,6 +183,7 @@ const toggleTheme = () => {
     font-weight: var(--font-medium);
     cursor: pointer;
     text-transform: capitalize;
+
     &:hover {
       color: var(--first-color);
       svg {
@@ -171,56 +191,74 @@ const toggleTheme = () => {
       }
     }
   }
+
   &__btns {
     display: flex;
     align-items: center;
   }
+
   &__toggle {
     color: var(--title-color);
     font-weight: var(--font-medium);
     font-size: 1.1rem;
     cursor: pointer;
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       display: none;
     }
+
     &:hover {
       color: var(--first-color);
     }
   }
+
   &__close {
     position: absolute;
     right: 1.3rem;
     bottom: 0.5rem;
     cursor: pointer;
     color: var(--first-color);
+
     &:hover {
       color: var(--first-color-alt);
     }
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       display: none;
     }
   }
+
   &__icon {
     font-size: 1.2rem;
+
     &--translate {
-      @include min-screen(768px) {
+      // 当屏幕宽度大于或等于 768px 时
+      @media (min-width: 768px) {
         display: block !important;
         font-size: 1.5rem;
       }
     }
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       display: none;
     }
   }
+
   &__theme {
     font-size: 1.2rem;
     color: var(--title-color);
     margin-right: var(--mb-1);
     cursor: pointer;
+
     &:hover {
       color: var(--first-color);
     }
-    @include min-screen(768px) {
+
+    // 当屏幕宽度大于或等于 768px 时
+    @media (min-width: 768px) {
       font-size: 1.4rem;
     }
   }

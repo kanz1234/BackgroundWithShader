@@ -2,12 +2,12 @@
     <header class="header scroll-header">
       <nav></nav>
     </header>
-    <!-- <div class="bg-black text-white">
+    <div class="bg-black text-white">
       
       <Layout>
         <scene />
       </Layout>
-    </div> -->
+    </div>
 	</template>
 
 <script setup>
