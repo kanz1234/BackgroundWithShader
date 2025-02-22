@@ -3,19 +3,6 @@ import { createGlobalState, useStorage } from '@vueuse/core'
 
 export const useThemeState = createGlobalState(
   () => {
-    /*==================== vueuse案例 ====================*/
-    // // state
-    // const count = ref(0)
-
-    // // getters
-    // const doubleCount = computed(() => count.value * 2)
-
-    // // actions
-    // function increment() {
-    //   count.value++
-    // }
-
-    // return { count, doubleCount, increment }
 
     // theme数据储存本地
     const theme = useStorage('theme','dark',localStorage)
@@ -25,6 +12,7 @@ export const useThemeState = createGlobalState(
     function toggleTheme() {
       theme.value = theme.value === 'light' ? 'dark' : 'light'
       document.body.setAttribute('data-theme',theme.value)
+      console.log("主题变了")
     }
 
     return {theme,toggleTheme}

@@ -1,21 +1,16 @@
 <template>
     <header class="header scroll-header">
-      <nav></nav>
+      <navigation></navigation>
     </header>
-    <div class="bg-black text-white">
-      
-      <Layout>
-        <scene />
-      </Layout>
-    </div>
+    <home></home>
 	</template>
 
 <script setup>
-import Layout from '../shaderBackgroundWebsite/components/layout.vue'
-import scene from '../shaderBackgroundWebsite/components/scene.vue'
-import nav from './components/nav.vue';
+import navigation from './components/navigation.vue';
+import home from './components/home.vue';
 </script>
 
 <style lang="scss">
 @import "@/styles/index.scss";
+
 </style>

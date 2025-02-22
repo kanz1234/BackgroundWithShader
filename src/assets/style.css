@@ -10,7 +10,7 @@ body{
 
 @font-face{
     font-family: Potra;
-    src: url("../../public/font/Potra-2.ttf");
+    src: url("/font/Potra-2.ttf");
 }
 
 

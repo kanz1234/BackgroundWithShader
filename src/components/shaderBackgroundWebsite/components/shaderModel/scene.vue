@@ -1,5 +1,5 @@
 <template>
-  <TresCanvas
+ <TresCanvas
     window-size
     :camera-controls="true"
     shadows
@@ -10,7 +10,7 @@
       :position="[0, 0, 16]" :fov="45" :near="0.1" :far="10000"
     />
     <OrbitControls
-          
+          :enableZoom="false"
           />
       <!-- 基础光照 -->
       <TresAmbientLight :intensity="0.5" />
@@ -23,12 +23,15 @@
     <model />
   </Suspense>
   </TresCanvas>
+
 </template>
 
 <script setup>
-import { OrbitControls } from '@tresjs/cientos'
-import model from './model.vue';
+import { OrbitControls } from '@tresjs/cientos';
+import model from '../shaderModel/model.vue';
 import * as THREE from 'three'
+import shaderModel from '../shaderModel/shaderModel.vue'
+import shaderModel2 from '../shaderModel/shaderModel2.vue'
 // 可以添加一些交互和动画逻辑
 const tcConfig = {
     clearColor: '#ffffff',
@@ -39,3 +42,6 @@ const tcConfig = {
     outputColorSpace: THREE.SRGBColorSpace,
 }
 </script>
+<style>
+
+</style>

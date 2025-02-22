@@ -7,6 +7,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { templateCompilerOptions } from '@tresjs/core'
 import glsl from 'vite-plugin-glsl';
 // https://vite.dev/config/
+import path from 'path';
+// 添加全局 SCSS 文件
+
 export default defineConfig({
   plugins: [
     vue({
@@ -18,12 +21,14 @@ export default defineConfig({
     }),
     vueJsx(),
     vueDevTools(),
-    glsl()
+    glsl(),
+
     
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  
 })

@@ -1,7 +1,7 @@
 <template>
   <nav class="nav container">
     <!-- logo -->
-    <a href="#" class="nav__logo">cosycosy</a>
+    <a href="#" class="nav__logo">KANZ</a>
 
     <div :class="['nav__menu',menuShow ? 'nav__menu--show' : '']">
       <ul class="nav__list grid">
@@ -40,7 +40,8 @@ import { useThemeState } from '../../../stores/index';
 import { useI18n } from 'vue-i18n';
 
 // 主题状态
-const themeState = useThemeState();
+// 主题状态和切换主题的方法
+const { theme, toggleTheme } = useThemeState();
 const { locale } = useI18n();
 
 // 响应式移动端菜单显示状态
@@ -86,50 +87,37 @@ const changeLanguage = () => {
   localStorage.setItem('i18n', locale.value);
 };
 
-// 切换主题
-const toggleTheme = () => {
-  themeState.theme.value = themeState.theme.value === 'dark' ? 'light' : 'dark';
-};
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/tools/_sassMagic.scss';
 .nav {
   max-width: 968px;
   height: var(--header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  // 当屏幕宽度大于或等于 768px 时
-  @media (min-width: 768px) {
+  @include min-screen(768px) {
     height: calc(var(--header-height) + 1.5rem);
     column-gap: 1rem;
   }
-
   #translate {
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       font-size: 0;
     }
   }
-
   &__logo {
     color: var(--title-color);
     font-weight: var(--font-medium);
   }
-
   &__menu {
     &--show {
       bottom: 0 !important;
     }
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       margin-left: auto;
     }
-
-    // 当屏幕宽度小于或等于 767px 时
-    @media (max-width: 767px) {
+    @include max-screen(767px) {
       position: fixed;
       bottom: -100%;
       left: 0;
@@ -140,40 +128,29 @@ const toggleTheme = () => {
       border-radius: 1.5rem 1.5rem 0 0;
       transition: 0.3s;
     }
-
-    // 当屏幕宽度小于或等于 350px 时
-    @media (max-width: 350px) {
+    @include max-screen(350px) {
       padding: 2rem 0.25rem 4rem;
     }
   }
-
   &__list {
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-
-    // 当屏幕宽度小于或等于 350px 时
-    @media (max-width: 350px) {
+    @include max-screen(350px) {
       column-gap: 0;
     }
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       display: flex;
       column-gap: 2rem;
     }
   }
-
   &__item {
     align-items: center;
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       align-content: center;
       display: flex;
       flex-wrap: wrap;
     }
   }
-
   &__link {
     display: flex;
     flex-direction: column;
@@ -183,7 +160,6 @@ const toggleTheme = () => {
     font-weight: var(--font-medium);
     cursor: pointer;
     text-transform: capitalize;
-
     &:hover {
       color: var(--first-color);
       svg {
@@ -191,74 +167,56 @@ const toggleTheme = () => {
       }
     }
   }
-
   &__btns {
     display: flex;
     align-items: center;
   }
-
   &__toggle {
     color: var(--title-color);
     font-weight: var(--font-medium);
     font-size: 1.1rem;
     cursor: pointer;
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       display: none;
     }
-
     &:hover {
       color: var(--first-color);
     }
   }
-
   &__close {
     position: absolute;
     right: 1.3rem;
     bottom: 0.5rem;
     cursor: pointer;
     color: var(--first-color);
-
     &:hover {
       color: var(--first-color-alt);
     }
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       display: none;
     }
   }
-
   &__icon {
     font-size: 1.2rem;
-
     &--translate {
-      // 当屏幕宽度大于或等于 768px 时
-      @media (min-width: 768px) {
+      @include min-screen(768px) {
         display: block !important;
         font-size: 1.5rem;
       }
     }
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       display: none;
     }
   }
-
   &__theme {
     font-size: 1.2rem;
     color: var(--title-color);
     margin-right: var(--mb-1);
     cursor: pointer;
-
     &:hover {
       color: var(--first-color);
     }
-
-    // 当屏幕宽度大于或等于 768px 时
-    @media (min-width: 768px) {
+    @include min-screen(768px) {
       font-size: 1.4rem;
     }
   }

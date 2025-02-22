@@ -20,6 +20,7 @@ const iResolution = new THREE.Vector3(
   sizes.height.value,
   renderer.value.pixelRatio
 );
+
 // 鼠标交互逻辑
 const handleMove = (e: MouseEvent) => {
         iMouse.x = e.pageX;
@@ -177,20 +178,19 @@ const bufferDFragment = `
         vec3 pws = vec3(omx*omx, 2.0*omx*x, x*x);
         return clamp(mix(m*pws, m2*pws, step(x2,0.5)),0.,1.);
     }
-    // 颜色变化
     vec4 pal(float x)
-    {
-        // 新的颜色参数
-        vec3 pal = getPalette(-x, vec3(0.1, 0.3, 0.5), vec3(0.7, 0.2, 0.8), vec3(0.9, 0.6, 0.4), vec3(1.0, 0.1, 0.3));
-        return vec4(pal, 1.);
-    }
+{
+    // 新的颜色参数
+    vec3 pal = getPalette(-x, vec3(0.1, 0.3, 0.5), vec3(0.7, 0.2, 0.8), vec3(0.9, 0.6, 0.4), vec3(1.0, 0.1, 0.3));
+    return vec4(pal, 1.);
+}
 
-    vec4 pal2(float x)
-    {
-        // 新的颜色参数
-        vec3 pal = getPalette(-x, vec3(0.5, 0.7, 0.9), vec3(0.2, 0.5, 0.3), vec3(0.8, 0.4, 0.6), vec3(0.3, 0.9, 0.7));
-        return vec4(pal, 1.);
-    }
+vec4 pal2(float x)
+{
+    // 新的颜色参数
+    vec3 pal = getPalette(-x, vec3(0.5, 0.7, 0.9), vec3(0.2, 0.5, 0.3), vec3(0.8, 0.4, 0.6), vec3(0.3, 0.9, 0.7));
+    return vec4(pal, 1.);
+}
 
     void main()
     {
@@ -301,8 +301,8 @@ const bufferA = new BufferShader(
         iFrame: { value: 0 },
         iChannel0: { value: null }
     },
-    sizes.width.value,
-    sizes.height.value
+    iResolution.x,
+    iResolution.y
 );
 
 const bufferB = new BufferShader(
@@ -316,8 +316,8 @@ const bufferB = new BufferShader(
         iFrame: { value: 0 },
         iChannel0: { value: null }
     },
-    sizes.width.value,
-    sizes.height.value
+    iResolution.x,
+    iResolution.y
 );
 
 const bufferC = new BufferShader(
@@ -331,8 +331,8 @@ const bufferC = new BufferShader(
         iFrame: { value: 0 },
         iChannel0: { value: null }
     },
-    sizes.width.value,
-    sizes.height.value
+    iResolution.x,
+    iResolution.y
 );
 
 const bufferD = new BufferShader(
@@ -347,8 +347,8 @@ const bufferD = new BufferShader(
         iChannel0: { value: null },
         iChannel1: { value: null }
     },
-    sizes.width.value,
-    sizes.height.value
+    iResolution.x,
+    iResolution.y
 );
 
 const bufferMain = new BufferShader(
@@ -370,8 +370,8 @@ const bufferMain = new BufferShader(
         iResolution: { value: iResolution },
         iChannel0: { value: null }
     },
-    sizes.width.value,
-    sizes.height.value
+    iResolution.x,
+    iResolution.y
 );
 
 

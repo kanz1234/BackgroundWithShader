@@ -1,7 +1,7 @@
 
 <template>
   <TresMesh>
-      <TresPlaneGeometry :args="[sizes.width.value / 10, sizes.height.value / 10]" />
+      <TresPlaneGeometry :args="[sizes.width.value / 30, sizes.height.value / 30]" />
       <TresShaderMaterial v-bind="tsMaterialConfig" />
   </TresMesh>
   <!-- <primitive :object="showMesh" /> -->
@@ -14,8 +14,8 @@ import { gsap } from 'gsap'
 
 import { onMounted } from 'vue';
 import { useGLTF } from "@tresjs/cientos"
-import skyFragment from '../shader/sky/skyFragment.glsl'
-import skyVertex from '../shader/sky/skyVertex.glsl'
+import Descent3DFragment from '@/components/shaderBackgroundWebsite/shader/shaderToy/Descent3DFragment.glsl'
+import Descent3DVertex from '@/components/shaderBackgroundWebsite/shader/shaderToy/Descent3DVertex.glsl'
 
 const { sizes } = useTresContext()
 
@@ -32,10 +32,10 @@ const tsMaterialConfig = {
           // 控制方向
           flowDirection:{value: new THREE.Vector2(0, 1) },
       },
-  vertexShader: skyVertex,
+  vertexShader: Descent3DVertex,
   // 双面展示
   side:THREE.DoubleSide,
-  fragmentShader: skyFragment
+  fragmentShader: Descent3DFragment
       
 }
 

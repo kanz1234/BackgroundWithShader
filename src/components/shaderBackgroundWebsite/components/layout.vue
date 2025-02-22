@@ -27,8 +27,8 @@
 <script setup>
 </script>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Wallpoet&display=swap');
+<style scoped>
+
 /* 引入外部 CSS 文件 */
 @import '../../../assets/style.css';
 a {
