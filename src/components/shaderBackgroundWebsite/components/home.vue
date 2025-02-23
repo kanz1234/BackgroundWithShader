@@ -3,10 +3,10 @@
     <div class="home__container container grid">
     <div class="home__content grid">
         <div class="home__social">
-        <a href="https://gitee.com/fangchenjia" target="_blank">
+        <a href="https://gitee.com/kanz1234" target="_blank">
             <i class="alicon alicon-gitee home__icon"></i>
         </a>
-        <a href="http://github.com/fangchenjia" target="_blank">
+        <a href="http://github.com/kanz1234" target="_blank">
             <i class="alicon alicon-github home__icon"></i>
         </a>
         </div>
@@ -187,4 +187,5 @@ writeText(titleText, 'write');
     font-weight: 1000;
 }
 }
+
 </style>
